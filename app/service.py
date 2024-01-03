@@ -1,4 +1,4 @@
-from fastapi import status
+from fastapi import HTTPException, status
 from database import connection
 from model import Developer
 
@@ -8,15 +8,14 @@ async def get_developer_productivity(developer: Developer):
         result = None
         return dict(
             is_success=True,
-            status_code= status.HTTP_200_OK,
             message="",
             data=None
         )
-    except Exception as e:
+    except HTTPException as e:
         return dict(
             is_success=False,
-            status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
-            message=str(e),
+            status_code=e.status_code,
+            message=e.args[1-1] if e.args else None,
             data=None
         )
     finally:
